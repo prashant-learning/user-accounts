@@ -1,7 +1,9 @@
 package com.usbank.user.accounts.useraccounts.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.usbank.user.accounts.useraccounts.model.Accounts;
 import com.usbank.user.accounts.useraccounts.model.request.AccountCreateRequest;
+import com.usbank.user.accounts.useraccounts.model.response.UserAccountDetailsWithLoanAccountResponse;
 import com.usbank.user.accounts.useraccounts.service.UserAccountsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,7 +34,7 @@ public class UserAccountController implements UserAccountApi{
             }
     )
     @PostMapping("/accounts")
-    public ResponseEntity<Accounts> createUserAccount(@RequestBody AccountCreateRequest accountCreateRequest) {
+    public ResponseEntity<Accounts> createUserAccount(@RequestBody AccountCreateRequest accountCreateRequest) throws JsonProcessingException {
        return ResponseEntity.status(HttpStatus.CREATED).body(userAccountsService.createUserAccounts(accountCreateRequest));
     }
 
@@ -48,5 +50,19 @@ public class UserAccountController implements UserAccountApi{
     @GetMapping("/accounts/{userId}")
     public ResponseEntity<List<Accounts>> getUserAccount(@PathVariable long userId) {
        return ResponseEntity.status(HttpStatus.OK).body(userAccountsService.getAccountsByUserId(userId));
+    }
+
+    @Override
+    @Tag(name = "user accounts")
+    @Operation(summary = "Used for fetching user account with loan", description = "")
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "201", description = "Successful fetched the user accounts"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+            }
+    )
+    @GetMapping("/accounts/loan/{userId}")
+    public ResponseEntity<List<UserAccountDetailsWithLoanAccountResponse>> getUserAccountWithLoanDetails(@PathVariable long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(userAccountsService.getUserAccountWithLoanDetails(userId));
     }
 }

@@ -14,4 +14,5 @@ public class AccountCreateRequest {
     private String branchName;
     private String branchLocation;
     private String branchIFSC;
+    private LoanApplicationRequest loanApplicationRequest;
 }
